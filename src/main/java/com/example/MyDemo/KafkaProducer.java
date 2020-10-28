@@ -1,26 +1,30 @@
 package com.example.MyDemo;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Service
-public class Producer {
+public class KafkaProducer {
+
 
     @Value("${topic.name}")
-    private String TOPIC;
+    private String topic;
 
     private final KafkaTemplate<String, User> kafkaTemplate;
 
     @Autowired
-    public Producer(KafkaTemplate<String, User> kafkaTemplate) {
+    public KafkaProducer(KafkaTemplate<String, User> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    void sendMessage(User user) {
-        this.kafkaTemplate.send(this.TOPIC, user.getName(), user);
+    public void sendMessage(User user) {
+        this.kafkaTemplate.send(this.topic, user.getName(), user);
         log.info(String.format("Produced user -> %s", user));
     }
 }
